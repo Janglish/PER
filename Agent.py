@@ -104,7 +104,8 @@ class Agent(nn.Module):
         #    param.grad.data.clamp_(-1, 1)
         optimizer.step()
 
-        state_action_values = self(state_batch).gather(1, action_batch)
+        with torch.no_grad():
+            state_action_values = self(state_batch).gather(1, action_batch)
         delta = expected_state_action_values - state_action_values
         alpha = self.replay_buffer.alpha
         epsilon = self.replay_buffer.epsilon
