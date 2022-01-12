@@ -28,6 +28,7 @@ class ReplayBuffer:
             self.buffer.append(None)
         
         experience = self.Transition(*args)
+        experience.reward.clamp_(-1, 1)
         experience = zlib.compress(pickle.dumps(experience))
         self.buffer[self.position] = experience
         self.priorities[self.position] = (abs(priority) + self.epsilon) ** self.alpha
